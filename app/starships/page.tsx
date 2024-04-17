@@ -4,18 +4,28 @@ import axios from 'axios';
 import Pagination from '../components/pagination';
 import StarshipsModal from '../components/StarshipsModal';
 import Image from 'next/image';
+interface Starship {
+    name: string;
+    model: string;
+    manufacturer: string;
+    cost_in_credits: string;
+    length: string;
+    max_atmosphering_speed: string;
+    crew: string;
+    passengers: string;
+}
 const StarshipsPage = () => {
-    const [allStarships, setAllStarships] = useState([]);
-    const [displayedStarships, setDisplayedStarships] = useState([]);
+    const [allStarships, setAllStarships] = useState<Starship[]>([]);
+    const [displayedStarships, setDisplayedStarships] = useState<Starship[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [starshipsPerPage] = useState(10);
-    const [selectedStarship, setSelectedStarship] = useState(null);
+    const [selectedStarship, setSelectedStarship] = useState<Starship | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchStarships = async () => {
             const res = await axios.get('https://swapi.dev/api/starships/');
-            setAllStarships(res.data.results);
+            setAllStarships(res.data.results); // Make sure the results conform to Starship[]
             setDisplayedStarships(res.data.results);
         };
 
@@ -34,7 +44,7 @@ const StarshipsPage = () => {
     const indexOfFirstStarship = indexOfLastStarship - starshipsPerPage;
     const currentStarships = displayedStarships.slice(indexOfFirstStarship, indexOfLastStarship);
 
-    const openModal = (starship) => {
+    const openModal = (starship: Starship) => {
         setSelectedStarship(starship);
     };
 
@@ -42,7 +52,7 @@ const StarshipsPage = () => {
         setSelectedStarship(null);
     };
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <div className="container mx-auto px-8 py-8">
@@ -52,14 +62,14 @@ const StarshipsPage = () => {
                         src="/characterofstarship.svg"
                         width={150}
                         height={150}
-                        alt="Planet"
+                        alt="Starship"
                     />
                 </div>
-                <div className="flex-grow flex flex-col justify-center items-center px-4"> {/* Center content vertically and horizontally */}
-                    <h1 className="text-4xl font-bold text-white mb-4">Корабль</h1>
+                <div className="flex-grow flex flex-col justify-center items-center px-4">
+                    <h1 className="text-4xl font-bold text-white mb-4">Корабли</h1>
                     <input
                         type="search"
-                        placeholder="Быстрый поиск коробля"
+                        placeholder="Быстрый поиск корабля"
                         className="px-4 py-2 border rounded-lg"
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{
@@ -81,10 +91,9 @@ const StarshipsPage = () => {
                 ))}
             </div>
             <Pagination
-                itemsPerPage={starshipsPerPage}
-                totalItems={displayedStarships.length}
+                charactersPerPage={starshipsPerPage}
+                totalCharacters={displayedStarships.length}
                 paginate={paginate}
-                currentPage={currentPage}
             />
             {selectedStarship && <StarshipsModal starship={selectedStarship} onClose={closeModal} />}
         </div>

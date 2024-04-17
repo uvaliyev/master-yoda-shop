@@ -1,6 +1,11 @@
 "use client"
+interface PaginationProps {
+    charactersPerPage: number;
+    totalCharacters: number;
+    paginate: (pageNumber: number) => void;
+}
 
-const Pagination = ({ charactersPerPage, totalCharacters, paginate }) => {
+const Pagination = ({ charactersPerPage, totalCharacters, paginate }: PaginationProps) => {
     const pageNumbers = [];
 
     for (let i = 1; i <= Math.ceil(totalCharacters / charactersPerPage); i++) {

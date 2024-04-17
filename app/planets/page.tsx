@@ -4,20 +4,51 @@ import axios from 'axios';
 import Pagination from '../components/pagination';
 import PlanetModal from '../components/PlanetModal';
 import Image from 'next/image';
+interface Planet {
+    name: string;
+    population: string;
+    url: string;
+    climate: string;
+    diameter: string;
+    gravity: string;
+}
+interface PaginationProps {
+    charactersPerPage: number;
+    totalCharacters: number;
+    paginate: (pageNumber: number) => void;
+}
+
+interface Planet {
+    name: string;
+    population: string;
+    url: string;
+    climate: string;
+    diameter: string;
+    gravity: string;
+}
+
 
 const PlanetsPage = () => {
-    const [allPlanets, setAllPlanets] = useState([]);
-    const [displayedPlanets, setDisplayedPlanets] = useState([]);
+    const [allPlanets, setAllPlanets] = useState<Planet[]>([]);
+    const [displayedPlanets, setDisplayedPlanets] = useState<Planet[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [planetsPerPage] = useState(10);
-    const [selectedPlanet, setSelectedPlanet] = useState(null);
+    const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchPlanets = async () => {
             const res = await axios.get('https://swapi.dev/api/planets/');
-            setAllPlanets(res.data.results);
-            setDisplayedPlanets(res.data.results);
+            const planets = res.data.results.map((planet: any) => ({
+                name: planet.name,
+                population: planet.population,
+                url: planet.url,
+                climate: planet.climate,
+                diameter: planet.diameter,
+                gravity: planet.gravity
+            }));
+            setAllPlanets(planets);
+            setDisplayedPlanets(planets);
         };
 
         fetchPlanets();
@@ -38,7 +69,7 @@ const PlanetsPage = () => {
     const indexOfFirstPlanet = indexOfLastPlanet - planetsPerPage;
     const currentPlanets = displayedPlanets.slice(indexOfFirstPlanet, indexOfLastPlanet);
 
-    const openModal = (planet) => {
+    const openModal = (planet: Planet) => {
         setSelectedPlanet(planet);
     };
 
@@ -46,11 +77,10 @@ const PlanetsPage = () => {
         setSelectedPlanet(null);
     };
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <div className="container mx-auto px-8 py-8">
-
             <div className="flex items-center bg-[#282874] rounded-lg overflow-hidden mb-8">
                 <div className="flex-none ml-4">
                     <Image
@@ -60,7 +90,7 @@ const PlanetsPage = () => {
                         alt="Planet"
                     />
                 </div>
-                <div className="flex-grow flex flex-col justify-center items-center px-4"> {/* Center content vertically and horizontally */}
+                <div className="flex-grow flex flex-col justify-center items-center px-4">
                     <h1 className="text-4xl font-bold text-white mb-4">Планеты</h1>
                     <input
                         type="search"
@@ -74,7 +104,6 @@ const PlanetsPage = () => {
                     />
                 </div>
             </div>
-
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 {currentPlanets.map((planet) => (
                     <div
@@ -89,10 +118,9 @@ const PlanetsPage = () => {
                 ))}
             </div>
             <Pagination
-                itemsPerPage={planetsPerPage}
-                totalItems={allPlanets.length}
+                charactersPerPage={planetsPerPage}
+                totalCharacters={displayedPlanets.length}
                 paginate={paginate}
-                currentPage={currentPage}
             />
             {selectedPlanet && (
                 <PlanetModal planet={selectedPlanet} onClose={closeModal} />

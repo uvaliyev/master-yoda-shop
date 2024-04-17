@@ -4,12 +4,19 @@ import axios from 'axios';
 import Pagination from '../components/pagination';
 import CharacterModal from '../components/CharacterModal';
 import Image from 'next/image';
+
+interface Character {
+    id: number;
+    name: string;
+    image: string;
+}
+
 const CharactersPage = () => {
-    const [characters, setCharacters] = useState([]);
-    const [filteredCharacters, setFilteredCharacters] = useState([]);
+    const [characters, setCharacters] = useState<Character[]>([]);
+    const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [charactersPerPage] = useState(10);
-    const [selectedCharacter, setSelectedCharacter] = useState(null);
+    const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
@@ -27,13 +34,13 @@ const CharactersPage = () => {
             character.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredCharacters(results);
-        setCurrentPage(1); // Reset to the first page when search term changes
+        setCurrentPage(1);
     }, [searchTerm, characters]);
 
     const indexOfLastCharacter = currentPage * charactersPerPage;
     const indexOfFirstCharacter = indexOfLastCharacter - charactersPerPage;
     const currentCharacters = filteredCharacters.slice(indexOfFirstCharacter, indexOfLastCharacter);
-    const openModal = (character) => {
+    const openModal = (character: Character) => {
         setSelectedCharacter(character);
     };
 
@@ -41,12 +48,12 @@ const CharactersPage = () => {
         setSelectedCharacter(null);
     };
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <div className="container mx-auto px-8 py-8">
             <div className="flex items-center bg-[#E03D31] rounded-lg overflow-hidden mb-8">
-                <div className="flex-none ml-4"> {/* Add a margin to the left of the image */}
+                <div className="flex-none ml-4">
                     <Image
                         src="/characterofwoman.svg"
                         width={150}
@@ -62,8 +69,8 @@ const CharactersPage = () => {
                         className="px-4 py-2 border rounded-lg"
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{
-                            maxWidth: '300px', // Limit the width of the input to match your design
-                            width: '100%', // Make the input responsive to the container size
+                            maxWidth: '300px',
+                            width: '100%',
                         }}
                     />
                 </div>
