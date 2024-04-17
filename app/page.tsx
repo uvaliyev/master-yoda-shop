@@ -15,10 +15,10 @@ export default function Home() {
               <h1 className="text-7xl font-bold">Как отличить хорошую сторону от плохой?</h1>
             </header>
             <div className="grid grid-cols-4 gap-4">
-              <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mr4">
+              <button onClick={() => window.location.hash = 'myProducts'} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mr4">
                 Продукты
               </button>
-              <button className="bg-gray-200 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline ">
+              <button onClick={() => window.location.hash = 'aboutStore'} className="bg-gray-200 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline ">
                 О компании
               </button>
             </div>
@@ -26,7 +26,7 @@ export default function Home() {
         </section>
 
         <header>
-          <h1 className="text-center text-7xl font-bold">О моем магазине</h1>
+          <h1 id="aboutStore" className="text-center text-7xl font-bold">О моем магазине</h1>
         </header>
         <section className="flex">
           <main className="w-3/5">
@@ -48,7 +48,7 @@ export default function Home() {
           <YoutubeEmbed embedId="WrsvL0ULzmc" />
         </div>
         <header>
-          <h1 className="text-center text-7xl font-bold">Мои продукты</h1>
+          <h1 id="myProducts" className="text-center text-7xl font-bold">Мои продукты</h1>
         </header>
         <section className="my-8">
           <div className="flex justify-around">
